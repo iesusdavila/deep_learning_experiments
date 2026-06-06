@@ -1,33 +1,25 @@
-import numpy as np
 import copy
 
 def update_parameters(parameters, grads, learning_rate = 1.2):
     """
-    Updates parameters using the gradient descent update rule given above
+    Update parameters using gradient descent
     
     Arguments:
-    parameters -- python dictionary containing your parameters 
-    grads -- python dictionary containing your gradients 
+    params -- python dictionary containing your parameters 
+    grads -- python dictionary containing your gradients, output of L_model_backward
     
     Returns:
     parameters -- python dictionary containing your updated parameters 
-    """    
-    W1 = copy.deepcopy(parameters["W1"])
-    b1 = copy.deepcopy(parameters["b1"])
-    W2 = copy.deepcopy(parameters["W2"])
-    b2 = copy.deepcopy(parameters["b2"])
+                  parameters["W" + str(l)] = ... 
+                  parameters["b" + str(l)] = ...
+    """
     
-    dW1 = grads["dW1"]
-    db1 = grads["db1"]
-    dW2 = grads["dW2"]
-    db2 = grads["db2"]
-    
-    W1 = W1 - learning_rate * dW1
-    b1 = b1 - learning_rate * db1
-    W2 = W2 - learning_rate * dW2
-    b2 = b2 - learning_rate * db2
-    
-    parameters = {"W1": W1, "b1": b1,
-                  "W2": W2, "b2": b2}
+    parameters = copy.deepcopy(parameters)
+    L = len(parameters) // 2 # number of layers in the neural network
+
+    for l in range(L):
+        parameters["W" + str(l + 1)] = parameters["W" + str(l + 1)] - learning_rate * grads["dW" + str(l + 1)]
+
+        parameters["b" + str(l + 1)] = parameters["b" + str(l + 1)] - learning_rate * grads["db" + str(l + 1)]
     
     return parameters
