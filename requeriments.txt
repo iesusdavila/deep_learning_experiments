@@ -1,1 +1,5 @@
 numpy==2.2.6
+h5py==3.16.0
+matplotlib==3.10.9
+matplotlib-inline==0.2.2
+scipy==1.17.1
