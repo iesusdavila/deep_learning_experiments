@@ -1,5 +1,12 @@
 import numpy as np
 
+def tanh_backward(dA, cache):
+    Z = cache
+    t = np.tanh(Z)
+    dZ = dA * (1 - t ** 2)
+    assert (dZ.shape == Z.shape)
+    return dZ
+
 def relu_backward(dA, cache):
     """
     Implement the backward propagation for a single RELU unit.

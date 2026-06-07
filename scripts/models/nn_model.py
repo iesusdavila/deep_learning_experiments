@@ -1,37 +1,37 @@
-from utils.lr_utils import layer_sizes, initialize_parameters
-from calculations.forward_propagation import forward_propagation
-from calculations.compute_cost import compute_cost
-from calculations.backward_propagation import backward_propagation
-from calculations.update_parameters import update_parameters
 import numpy as np
+from utils.lr_utils import initialize_parameters
+from calculations.forward_propagation import L_model_forward
+from calculations.compute_cost import compute_cost
+from calculations.backward_propagation import L_model_backward
+from calculations.update_parameters import update_parameters
 
-def nn_model(X, Y, n_h, num_iterations = 10000, print_cost=False):
+
+def nn_model(X, Y, n_h, num_iterations=10000, learning_rate=1.2, print_cost=False):
     """
     Arguments:
-    X -- dataset of shape (2, number of examples)
+    X -- dataset of shape (n_x, number of examples)
     Y -- labels of shape (1, number of examples)
     n_h -- size of the hidden layer
-    num_iterations -- Number of iterations in gradient descent loop
-    print_cost -- if True, print the cost every 1000 iterations
-    
+    num_iterations -- number of gradient descent iterations
+    learning_rate -- learning rate for gradient descent
+    print_cost -- if True, print cost every 1000 iterations
+
     Returns:
-    parameters -- parameters learnt by the model. They can then be used to predict.
+    parameters -- parameters learnt by the model
     """
-    
     np.random.seed(3)
-    n_x = layer_sizes(X, Y)[0]
-    n_y = layer_sizes(X, Y)[2]
-    
-    
+    n_x = X.shape[0]
+    n_y = Y.shape[0]
+
     parameters = initialize_parameters(n_x, n_h, n_y)
 
-    for i in range(0, num_iterations):
-        A2, cache = forward_propagation(X, parameters)
-        cost = compute_cost(A2, Y)
-        grads = backward_propagation(parameters, cache, X, Y)
-        parameters = update_parameters(parameters, grads)
-        
+    for i in range(num_iterations):
+        AL, caches = L_model_forward(X, parameters, hidden_activation="tanh")
+        cost = compute_cost(AL, Y)
+        grads = L_model_backward(AL, Y, caches, hidden_activation="tanh")
+        parameters = update_parameters(parameters, grads, learning_rate)
+
         if print_cost and i % 1000 == 0:
-            print ("Cost after iteration %i: %f" %(i, cost))
+            print("Cost after iteration %i: %f" % (i, cost))
 
     return parameters
